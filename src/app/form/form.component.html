@@ -1,0 +1,109 @@
+<form [formGroup]="profileForm" (ngSubmit)="onsubmit()">
+  <label for="source"
+    ><h3>How did you get to know about Trukker</h3>
+    <select
+      class="form-select form-select-lg mb-3"
+      id="source"
+      formControlName="source"
+    >
+      <option selected>Select Source</option>
+      <option value="Facebook">Facebook</option>
+      <option value="Gmail">Gmail</option>
+      <option value="Instagram">Instagram</option>
+      <option value="LinkedIn">LinkedIn</option>
+    </select>
+  </label>
+
+  <h3>Tell us about your delivery:</h3>
+  <input
+    class="form-control"
+    type="text"
+    placeholder="Pick Up Location"
+    id="pickUp"
+    formControlName="pickup"
+  />
+  <span
+    *ngIf="pickup.invalid && (pickup.dirty || pickup.touched)"
+    style="color: red"
+  >
+    Pickup location is invalid
+  </span>
+  <input
+    class="form-control"
+    type="text"
+    placeholder="Drop Off Location"
+    id="dropOff"
+    formControlName="dropoff"
+  />
+  <span
+    *ngIf="dropoff.invalid && (dropoff.dirty || dropoff.touched)"
+    style="color: red"
+  >
+    Drop off location is invalid
+  </span>
+  <input
+    class="form-control"
+    type="text"
+    placeholder="Your Name"
+    id="name"
+    formControlName="name"
+  />
+  <span *ngIf="name.invalid && (name.dirty || name.touched)" style="color: red">
+    Name is invalid
+  </span>
+  <!-- <div *ngIf="name.invalid" class="alert alert-danger">
+    <div *ngIf="name.errors.required">Name is required.</div>
+    <div *ngIf="name.errors.minlength">
+      Name must be at least 4 characters long.
+    </div>
+  </div> -->
+
+  <div class="input-group" style="margin: 10px 0px">
+    <span class="input-group-text" id="mobileNumber">+91</span>
+    <input
+      type="number"
+      class="form-control"
+      placeholder="Your Mobile Number"
+      formControlName="mobile"
+    />
+  </div>
+  <span
+    *ngIf="mobile.invalid && (mobile.dirty || mobile.touched)"
+    style="color: red"
+  >
+    Mobile Number is invalid
+  </span>
+  <input
+    class="form-control"
+    type="date"
+    placeholder="Enter the date"
+    id="date"
+    formControlName="date"
+  />
+  <select
+    class="form-select form-select-lg mb-3"
+    id="category"
+    formControlName="category"
+    (change)="addSubcategory()"
+  >
+    <option selected>Select Category</option>
+    <option value="Air Conditioners">Air Conditioners</option>
+    <option value="Dining Sets">Dining Sets</option>
+    <option value="Book Cases">Book Cases</option>
+    <option value="Bed and Bed Sets">Bed and Bed Sets</option>
+  </select>
+
+  <!-- DYNAMIC FORM  -->
+  <div formArrayName="items" *ngFor="let item of items.controls; let i = index">
+    <!-- The repeated alias template -->
+    <select name="" id="" [formControlName]="i">
+      <option value="" selected>Select Subcategory</option>
+      <option value="1">1</option>
+      <option value="2">2</option>
+      <option value="3">3</option>
+      <option value="4">4</option>
+    </select>
+  </div>
+
+  <button type="submit" [disabled]="!profileForm.valid">Submit</button>
+</form>
