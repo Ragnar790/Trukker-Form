@@ -15,10 +15,14 @@ import {
 export class FormComponent implements OnInit {
   constructor(private fb: FormBuilder, public http: HttpClient) {}
   itemsList = [];
+  sourceList = [];
   ngOnInit(): void {
     fetch('https://trukkerform-default-rtdb.firebaseio.com/Items.json')
       .then((res) => res.json())
       .then((res) => (this.itemsList = res));
+    fetch('https://trukkerform-default-rtdb.firebaseio.com/Sources.json')
+      .then((res) => res.json())
+      .then((res) => (this.sourceList = res));
   }
   sourceDropdown: string = 'Select Source';
   categoryDropdown: string = 'Select Category';
@@ -37,12 +41,13 @@ export class FormComponent implements OnInit {
     return sum;
   }
   get total() {
-    return this.calculateTotal();
+    return this.calculateTotal() + this.packingChargeHandler();
   }
 
   // CALCULATE VAT
   calculateVAT() {
-    let total = this.calculateTotal();
+    // let total = this.calculateTotal();
+    let total = this.total;
     let vat = 0.05 * total;
     return vat;
   }
@@ -51,7 +56,27 @@ export class FormComponent implements OnInit {
   }
   // FINAL  QUOTE
   calculateFinalQuote() {
-    return this.calculateTotal() + this.calculateVAT();
+    return (
+      this.calculateTotal() + this.calculateVAT() + this.packingChargeHandler()
+    );
+  }
+  // PACKING CHARGE
+  packingChargeHandler() {
+    if (
+      (document.querySelector('.packingCheckbox') as HTMLInputElement).checked
+    ) {
+      let total = this.calculateTotal();
+      return 0.02 * total;
+    } else {
+      return 0;
+    }
+    // console.log(
+    //   'p',
+    //   (document.querySelector('.packingCheckbox') as HTMLInputElement).checked
+    // );
+  }
+  get packingCharge() {
+    return this.packingChargeHandler();
   }
   get finalQuote() {
     return this.calculateFinalQuote();
@@ -73,8 +98,8 @@ export class FormComponent implements OnInit {
     category: ['', Validators.required],
     // items: this.fb.array([]),
     items: [[]],
-    pickupTime: ['', Validators.required],
-    dropoffTime: ['', Validators.required],
+    pickupTime: [''],
+    dropoffTime: [''],
     pickupContactName: [
       '',
       [Validators.required, Validators.pattern('[a-zA-Z][a-zA-Z ]{2,}')],
@@ -157,14 +182,30 @@ export class FormComponent implements OnInit {
     return this.profileForm.get('mobile');
   }
   onsubmit() {
-    this.http.post(
-      'https://trukkerform-default-rtdb.firebaseio.com/DeliveryDetails.json',
-      this.profileForm.value
-    );
-    // .subscribe((response) => {
-    //   console.log('repsonse ', response);
-    // })
-    // console.log('profile', this.profileForm.value);
+    this.profileForm.patchValue({
+      mobile: `+91${this.profileForm.get('mobile').value}`,
+      deliveryMobile: `+91${this.profileForm.get('deliveryMobile').value}`,
+      pickupMobile: `+91${this.profileForm.get('pickupMobile').value}`,
+      date: new Date(this.profileForm.get('date').value).toISOString(),
+    });
+    // this.http
+    //   .post(
+    //     'https://trukkerform-default-rtdb.firebaseio.com/DeliveryDetails.json',
+    //     this.profileForm.value
+    //   )
+    //   .subscribe((response) => {
+    //     console.log('repsonse ', response);
+    //   });
+    if (
+      (document.querySelector('.specificTimeToggler') as HTMLInputElement)
+        .checked
+    ) {
+      this.profileForm.get('pickupTime').setValue('NA');
+      this.profileForm.get('dropoffTime').setValue('NA');
+    } else {
+      this.profileForm.get('specificTime').setValue('NA');
+    }
+    console.log('profile', this.profileForm.value);
   }
 
   async addSubcategory() {

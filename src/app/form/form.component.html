@@ -8,10 +8,13 @@
       [(ngModel)]="sourceDropdown"
     >
       <option disabled>Select Source</option>
-      <option value="Facebook">Facebook</option>
+      <option *ngFor="let source of sourceList" [value]="source">
+        {{ source }}
+      </option>
+      <!-- <option value="Facebook">Facebook</option>
       <option value="Gmail">Gmail</option>
       <option value="Instagram">Instagram</option>
-      <option value="LinkedIn">LinkedIn</option>
+      <option value="LinkedIn">LinkedIn</option> -->
     </select>
     <span
       *ngIf="source.invalid && (source.dirty || source.touched)"
@@ -65,7 +68,7 @@
     </div>
   </div> -->
 
-  <div class="input-group" style="margin: 5px 0px">
+  <div class="input-group" style="margin: 10px 0px 0px 0px">
     <span class="input-group-text" id="mobileNumber">+91</span>
     <input
       type="number"
@@ -118,7 +121,12 @@
   <!-- CARD FOR ADDED ITEMS  -->
   <div
     class="card hide"
-    style="background-color: rgb(29, 135, 145); color: aliceblue; margin: 5px"
+    style="
+      background-color: rgb(29, 135, 145);
+      color: aliceblue;
+      margin: 5px;
+      margin-top: 20px;
+    "
   >
     <!-- LIST OF ITEMS ADDED  -->
     <ul
@@ -128,9 +136,9 @@
       <li
         class="list-group-item"
         style="
-          padding: 0px;
+          padding: 0px 5px;
           margin: 4px;
-          background-color: rgba(255, 255, 255, 0.356);
+          background-color: rgba(255, 255, 255, 0);
         "
       >
         <span style="float: left">{{ item.itemName }}</span>
@@ -160,16 +168,17 @@
       <div class="form-check">
         <div style="display: flex; float: left">
           <input
-            class="form-check-input"
+            class="form-check-input packingCheckbox"
             type="checkbox"
             value=""
             id="flexCheckDefault"
+            (click)="packingChargeHandler()"
           />
           <label class="form-check-label" for="flexCheckDefault">
             I want my items packed
           </label>
         </div>
-        <div style="float: right">Charge</div>
+        <div style="float: right">{{ packingCharge }}</div>
       </div>
       <div class="form-check">
         <div style="display: flex; float: left">
@@ -280,7 +289,12 @@
       </select>
       <span
         *ngIf="pickupTime.invalid && (pickupTime.dirty || pickupTime.touched)"
-        style="color: red; font-size: 10px"
+        style="
+          color: red;
+          font-size: 10px;
+          margin-top: -15px;
+          font-weight: bold;
+        "
       >
         Please enter a pickup time
       </span>
@@ -303,7 +317,12 @@
         *ngIf="
           dropoffTime.invalid && (dropoffTime.dirty || dropoffTime.touched)
         "
-        style="color: red"
+        style="
+          color: red;
+          font-size: 10px;
+          margin-top: -15px;
+          font-weight: bold;
+        "
       >
         Please enter a dropoff time
       </span>
@@ -321,7 +340,7 @@
         />
         <label class="form-check-label">I want specific pickup time</label>
       </div>
-      <div style="float: right">Amount</div>
+      <!-- <div style="float: right">Amount</div> -->
     </div>
     <!-- <input
       class="specificTimeToggler"
@@ -338,12 +357,15 @@
     <!-- FINAL PRICE, VAT, FINAL QUOTE  -->
     <div
       class="specificTimeBox hide"
-      style="background-color: rgba(255, 255, 255, 0.466); padding: 10px"
+      style="
+        background-color: rgb(29, 135, 145);
+        padding: 10px;
+        text-align: center;
+      "
     >
       <!-- style="display: flex; flex-direction: column; margin: 20px" -->
       <input
         class="form-control"
-        style="margin: 5px"
         type="text"
         placeholder="HH-MM (24h)"
         formControlName="specificTime"
@@ -352,7 +374,7 @@
         *ngIf="
           specificTime.invalid && (specificTime.dirty || specificTime.touched)
         "
-        style="color: red"
+        style="color: rgb(245, 80, 80)"
       >
         Please enter a valid time
       </span>
@@ -512,6 +534,6 @@
     (click)="onsubmit()"
     style="margin: 10px 14vw"
   >
-    Success
+    Submit
   </button>
 </form>

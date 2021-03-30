@@ -9,12 +9,12 @@ form {
   margin: 0px 32vw;
 }
 form > input {
-  margin-top: 5px;
+  margin-top: 10px;
   /* border-radius: 50%; */
 }
 select {
   width: -webkit-fill-available;
-  margin: 5px 0px;
+  margin: 10px 0px;
   border-radius: 5px;
   padding: 6px;
   outline: none;
@@ -71,7 +71,9 @@ div span {
 .specificTimeBox {
   display: flex;
   flex-direction: column;
-  margin: 20px;
+  background-color: rgb(29, 135, 145);
+  border-radius: 5px;
+  /* margin: 20px; */
 }
 .specificTimeBox.hide {
   display: none;
@@ -90,3 +92,6 @@ h4 {
 .specificTimeBox {
   position: absolute;
 } */
+section h3 {
+  text-align: start;
+}
