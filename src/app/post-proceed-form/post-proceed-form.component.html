@@ -1,0 +1,138 @@
+<form style="display: flex; flex-direction: column">
+  <!-- TIME  -->
+  <h3>Set Preferred Time</h3>
+  <!-- PICKUP TIME  -->
+  <select
+    class="form-select form-select-lg mb-3"
+    id="pickupTime"
+    formControlName="pickupTime"
+  >
+    <option [ngValue]="undefined" disabled selected>Select Pickup Time</option>
+    <option value="8">08 AM - 10 AM</option>
+    <option value="10">10 AM - 12 PM</option>
+    <option value="12">12 PM - 02 PM</option>
+    <option value="2">02 PM - 04 PM</option>
+  </select>
+  <!-- DROPOFF TIME  -->
+  <select class="form-select form-select-lg mb-3" id="dropoffTime">
+    <option [ngValue]="undefined" disabled selected>Select Dropoff Time</option>
+    <option value="2">02 PM - 04 PM</option>
+    <option value="4">04 PM - 06 PM</option>
+    <option value="6">06 PM - 08 PM</option>
+    <option value="8">08 PM - 10 PM</option>
+  </select>
+  <!-- PICK SPECIFIC TIME TOGGLER  -->
+  <div class="specificPickupTimeToggler">
+    <div style="float: left; display: flex; flex-direction: column">
+      <label class="form-check-label">I want specific pickup time</label>
+      <!-- <input
+        class="specificTimeToggler"
+        type="checkbox"
+        data-toggle="toggle"
+        data-on="Yes"
+        data-off="No"
+        data-onstyle="success"
+        data-offstyle="danger"
+        data-size="xs"
+        (change)="specificPickupTimeToggler()"
+      /> -->
+      <input
+        (change)="specificPickupTimeToggler()"
+        class="form-check-input specificTimeToggler"
+        type="checkbox"
+      />
+    </div>
+    <div style="float: right">Amount</div>
+  </div>
+  <!-- FINAL PRICE, VAT, FINAL QUOTE  -->
+  <div
+    class="specificTimeBox hide"
+    style="display: flex; flex-direction: column; margin: 20px"
+  >
+    <div class="finalPrice">
+      <div style="float: left">Final Price</div>
+      <div style="float: right">Amount</div>
+    </div>
+    <div class="vat">
+      <div style="float: left">VAT(5%)</div>
+      <div style="float: right">Amount</div>
+    </div>
+    <div class="finalQuote">
+      <div style="float: left">Final Quote</div>
+      <div style="float: right">Amount</div>
+    </div>
+  </div>
+
+  <h3>PickUp Details</h3>
+  <!-- NAME  -->
+  <input
+    class="form-control"
+    type="text"
+    placeholder="Pickup Contact Name"
+    id="pickUpContactName"
+    formControlName="pickupContactName"
+  />
+  <!-- NUMBER  -->
+  <div class="input-group" style="margin: 10px 0px">
+    <span class="input-group-text" id="mobileNumber">+91</span>
+    <input
+      type="number"
+      class="form-control"
+      placeholder="Pickup Contact Number"
+      formControlName="pickupMobile"
+    />
+  </div>
+  <!-- ADDRESS  -->
+  <input
+    class="form-control"
+    type="text"
+    placeholder="Pickup - Full Address"
+    id="pickUpAddress"
+    formControlName="pickupAddress"
+  />
+  <!-- DELIVERY DETAILS  -->
+  <h3>Delivery Details</h3>
+  <!-- NAME  -->
+  <input
+    class="form-control"
+    type="text"
+    placeholder="Delivery Contact Name"
+    id="deliveryContactName"
+    formControlName="deliveryContactName"
+  />
+  <!-- NUMBER  -->
+  <div class="input-group" style="margin: 10px 0px">
+    <span class="input-group-text" id="mobileNumber">+91</span>
+    <input
+      type="number"
+      class="form-control"
+      placeholder="Delivery Contact Number"
+      formControlName="deliveryMobile"
+    />
+  </div>
+  <!-- ADDRESS  -->
+  <input
+    class="form-control"
+    type="text"
+    placeholder="Dropoff - Full Address"
+    id="dropoffAddress"
+    formControlName="dropoffAddress"
+  />
+
+  <textarea
+    class="form-control"
+    id="exampleFormControlTextarea1"
+    rows="3"
+    style="margin: 10px 0px"
+    placeholder="Item Description (Optional)"
+    formControlName="itemDescription"
+  ></textarea>
+  <h3>Your Contact Details</h3>
+  <input
+    type="email"
+    class="form-control"
+    id="exampleFormControlInput1"
+    placeholder="Your Email"
+    formControlName="userEmail"
+  />
+</form>

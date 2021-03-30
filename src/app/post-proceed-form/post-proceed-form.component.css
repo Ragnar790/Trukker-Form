@@ -1,0 +1,16 @@
+/* select {
+  width: -webkit-fill-available;
+  margin: 10px 0px;
+  border-radius: 5px;
+  padding: 6px;
+  outline: none;
+  border: none;
+}
+select,
+input {
+  border-radius: 40px;
+}
+.hide {
+  visibility: hidden;
+  position: absolute;
+} */

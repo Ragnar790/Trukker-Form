@@ -1,17 +1,24 @@
-<form [formGroup]="profileForm" (ngSubmit)="onsubmit()">
+<form [formGroup]="profileForm">
   <label for="source"
     ><h3>How did you get to know about Trukker</h3>
     <select
       class="form-select form-select-lg mb-3"
       id="source"
       formControlName="source"
+      [(ngModel)]="sourceDropdown"
     >
-      <option selected>Select Source</option>
+      <option disabled>Select Source</option>
       <option value="Facebook">Facebook</option>
       <option value="Gmail">Gmail</option>
       <option value="Instagram">Instagram</option>
       <option value="LinkedIn">LinkedIn</option>
     </select>
+    <span
+      *ngIf="source.invalid && (source.dirty || source.touched)"
+      style="color: red"
+    >
+      Please enter a source
+    </span>
   </label>
 
   <h3>Tell us about your delivery:</h3>
@@ -58,7 +65,7 @@
     </div>
   </div> -->
 
-  <div class="input-group" style="margin: 10px 0px">
+  <div class="input-group" style="margin: 5px 0px">
     <span class="input-group-text" id="mobileNumber">+91</span>
     <input
       type="number"
@@ -79,18 +86,163 @@
     placeholder="Enter the date"
     id="date"
     formControlName="date"
+    [min]="minDate | date: 'yyyy-MM-dd'"
+    [max]="maxDate | date: 'yyyy-MM-dd'"
+    (keydown)="dateKeydownHandler()"
   />
+  <span *ngIf="date.invalid && (date.dirty || date.touched)" style="color: red">
+    Please enter a valid date
+  </span>
   <select
-    class="form-select form-select-lg mb-3"
+    class="form-select form-select-lg mb-3 selectCategory"
     id="category"
     formControlName="category"
     (change)="addSubcategory()"
+    [(ngModel)]="categoryDropdown"
   >
-    <option selected>Select Category</option>
-    <option value="Air Conditioners">Air Conditioners</option>
+    <option selected disabled>Select Category</option>
+    <option *ngFor="let item of itemsList" [value]="item.id">
+      {{ item.itemName }}
+    </option>
+    <!-- <option value="Dining Sets">Dining Sets</option>
+    <option value="Book Cases">Book Cases</option>
+    <option value="Bed and Bed Sets">Bed and Bed Sets</option> -->
+  </select>
+  <span
+    *ngIf="category.invalid && (category.dirty || category.touched)"
+    style="color: red"
+  >
+    Please enter a valid category
+  </span>
+
+  <!-- CARD FOR ADDED ITEMS  -->
+  <div
+    class="card hide"
+    style="background-color: rgb(29, 135, 145); color: aliceblue; margin: 5px"
+  >
+    <!-- LIST OF ITEMS ADDED  -->
+    <ul
+      class="list-group list-group-flush"
+      *ngFor="let item of itemsAdded; let i = index"
+    >
+      <li
+        class="list-group-item"
+        style="
+          padding: 0px;
+          margin: 4px;
+          background-color: rgba(255, 255, 255, 0.356);
+        "
+      >
+        <span style="float: left">{{ item.itemName }}</span>
+        <span style="float: right"
+          >{{ item.itemPrice }}
+          <!-- <button (click)="deleteBtnHandler(i)">btn</button> -->
+          <i
+            class="far fa-trash-alt"
+            style="margin: 5px; margin-left: 10px"
+            (click)="deleteBtnHandler(i)"
+          ></i>
+        </span>
+      </li>
+      <!-- <li class="list-group-item">
+        <span style="float: left">Second item</span>
+        <span style="float: right">Amt</span>
+      </li>
+      <li class="list-group-item">
+        <span style="float: left">Third item</span>
+        <span style="float: right">Amt</span>
+      </li> -->
+    </ul>
+    <!-- END OF LIST  -->
+
+    <!-- CHECKBOXES  -->
+    <div class="card-body" style="display: flex; flex-direction: column">
+      <div class="form-check">
+        <div style="display: flex; float: left">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            value=""
+            id="flexCheckDefault"
+          />
+          <label class="form-check-label" for="flexCheckDefault">
+            I want my items packed
+          </label>
+        </div>
+        <div style="float: right">Charge</div>
+      </div>
+      <div class="form-check">
+        <div style="display: flex; float: left">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            value=""
+            id="flexCheckDefault"
+          />
+          <label class="form-check-label" for="flexCheckDefault">
+            Disassembly and assembly
+          </label>
+        </div>
+        <div style="float: right">Charge</div>
+      </div>
+    </div>
+    <!-- END OF CHECKBOXES  -->
+    <!-- DETAILS -->
+    <div
+      class="details"
+      style="display: flex; flex-direction: column; padding: 1em"
+    >
+      <div class="total">
+        <div style="float: left">Total</div>
+        <div style="float: right">{{ total }}</div>
+      </div>
+      <div class="comboDiscount">
+        <div style="float: left">Combo Discount</div>
+        <div style="float: right">Amt</div>
+      </div>
+      <div class="baseQuote">
+        <div style="float: left">Base Quote</div>
+        <div style="float: right">Amt</div>
+      </div>
+      <div class="vat">
+        <div style="float: left">VAT (5%)</div>
+        <div style="float: right">{{ vat }}</div>
+      </div>
+      <h2 class="finalQuote">
+        <div style="float: left">Final Quote</div>
+        <div style="float: right">{{ finalQuote }}</div>
+      </h2>
+    </div>
+    <!-- END OF DETAILS  -->
+    <!-- CARD BUTTONS  -->
+    <div class="card-body" style="display: flex; justify-content: space-around">
+      <button
+        class="btn btn-primary addMoreItems"
+        (click)="toggleCategoryVisibility()"
+      >
+        Add More Items
+      </button>
+      <button class="btn btn-success placeOrder" (click)="proceedBtnHandler()">
+        Proceed
+      </button>
+    </div>
+    <!-- END OF CARD BUTTONS  -->
+  </div>
+  <!-- END OF CART  -->
+  <select
+    class="form-select form-select-lg mb-3 selectCategory2 hide"
+    id="category"
+    formControlName="category"
+    (change)="addSubcategory2()"
+  >
+    <option selected disabled>Select Category</option>
+    <option *ngFor="let item of itemsList" [value]="item.id">
+      {{ item.itemName }}
+    </option>
+    <!-- <option value="Air Conditioners">Air Conditioners</option>
     <option value="Dining Sets">Dining Sets</option>
     <option value="Book Cases">Book Cases</option>
-    <option value="Bed and Bed Sets">Bed and Bed Sets</option>
+    <option value="Bed and Bed Sets">Bed and Bed Sets</option> -->
   </select>
 
   <!-- DYNAMIC FORM  -->
@@ -105,5 +257,261 @@
     </select>
   </div>
 
-  <button type="submit" [disabled]="!profileForm.valid">Submit</button>
+  <!-- POST PROCEED FORM  -->
+  <section class="postProceed hide">
+    <!-- <app-post-proceed-form></app-post-proceed-form> -->
+    <!-- TIME  -->
+    <h3>Set Preferred Time</h3>
+    <div class="specificTimeInputs">
+      <!-- PICKUP TIME  -->
+      <label for="" style="font-weight: bold; color: white">Pickup Time</label>
+      <select
+        class="form-select form-select-lg mb-3"
+        id="pickupTime"
+        formControlName="pickupTime"
+      >
+        <option [ngValue]="undefined" disabled selected>
+          Select Pickup Time
+        </option>
+        <option value="08 AM - 10 AM">08 AM - 10 AM</option>
+        <option value="10 AM - 12 PM">10 AM - 12 PM</option>
+        <option value="12 PM - 02 PM">12 PM - 02 PM</option>
+        <option value="02 PM - 04 PM">02 PM - 04 PM</option>
+      </select>
+      <span
+        *ngIf="pickupTime.invalid && (pickupTime.dirty || pickupTime.touched)"
+        style="color: red; font-size: 10px"
+      >
+        Please enter a pickup time
+      </span>
+      <!-- DROPOFF TIME  -->
+      <label for="" style="font-weight: bold; color: white">Dropoff Time</label>
+      <select
+        class="form-select form-select-lg mb-3"
+        id="dropoffTime"
+        formControlName="dropoffTime"
+      >
+        <option [ngValue]="undefined" disabled selected>
+          Select Dropoff Time
+        </option>
+        <option value="02 PM - 04 PM">02 PM - 04 PM</option>
+        <option value="04 PM - 06 PM">04 PM - 06 PM</option>
+        <option value="06 PM - 08 PM">06 PM - 08 PM</option>
+        <option value="08 PM - 10 PM">08 PM - 10 PM</option>
+      </select>
+      <span
+        *ngIf="
+          dropoffTime.invalid && (dropoffTime.dirty || dropoffTime.touched)
+        "
+        style="color: red"
+      >
+        Please enter a dropoff time
+      </span>
+    </div>
+    <!-- PICK SPECIFIC TIME TOGGLER  -->
+    <div
+      class="specificPickupTimeToggler"
+      style="height: 5vh; margin: 5px; margin-left: 20px"
+    >
+      <div style="float: left; display: flex; flex-direction: column">
+        <input
+          (change)="specificPickupTimeToggler()"
+          class="form-check-input specificTimeToggler"
+          type="checkbox"
+        />
+        <label class="form-check-label">I want specific pickup time</label>
+      </div>
+      <div style="float: right">Amount</div>
+    </div>
+    <!-- <input
+      class="specificTimeToggler"
+      type="checkbox"
+      data-toggle="toggle"
+      data-on="Yes"
+      data-off="No"
+      data-onstyle="success"
+      data-offstyle="danger"
+      data-size="xs"
+      (change)="specificPickupTimeToggler()"
+      /> -->
+    <!-- formControlName="" -->
+    <!-- FINAL PRICE, VAT, FINAL QUOTE  -->
+    <div
+      class="specificTimeBox hide"
+      style="background-color: rgba(255, 255, 255, 0.466); padding: 10px"
+    >
+      <!-- style="display: flex; flex-direction: column; margin: 20px" -->
+      <input
+        class="form-control"
+        style="margin: 5px"
+        type="text"
+        placeholder="HH-MM (24h)"
+        formControlName="specificTime"
+      />
+      <span
+        *ngIf="
+          specificTime.invalid && (specificTime.dirty || specificTime.touched)
+        "
+        style="color: red"
+      >
+        Please enter a valid time
+      </span>
+      <div class="finalPrice">
+        <div style="float: left">Final Price</div>
+        <div style="float: right">{{ total }}</div>
+      </div>
+      <div class="vat">
+        <div style="float: left">VAT(5%)</div>
+        <div style="float: right">{{ vat }}</div>
+      </div>
+      <div class="finalQuote">
+        <div style="float: left">Final Quote</div>
+        <div style="float: right">{{ finalQuote }}</div>
+      </div>
+      <!-- style="margin: 10px" -->
+    </div>
+
+    <h3 style="color: white">PickUp Details</h3>
+    <!-- NAME  -->
+    <input
+      class="form-control"
+      type="text"
+      placeholder="Pickup Contact Name"
+      id="pickUpContactName"
+      formControlName="pickupContactName"
+    />
+    <span
+      *ngIf="
+        pickupContactName.invalid &&
+        (pickupContactName.dirty || pickupContactName.touched)
+      "
+      style="color: red"
+    >
+      Please enter a valid name
+    </span>
+    <!-- NUMBER  -->
+    <div class="input-group" style="margin: 10px 0px">
+      <span class="input-group-text" id="mobileNumber">+91</span>
+      <input
+        type="number"
+        class="form-control"
+        placeholder="Pickup Contact Number"
+        formControlName="pickupMobile"
+      />
+    </div>
+    <span
+      *ngIf="
+        pickupMobile.invalid && (pickupMobile.dirty || pickupMobile.touched)
+      "
+      style="color: red"
+    >
+      Please enter a valid number
+    </span>
+    <!-- ADDRESS  -->
+    <input
+      class="form-control"
+      type="text"
+      placeholder="Pickup - Full Address"
+      id="pickUpAddress"
+      formControlName="pickupAddress"
+    />
+    <span
+      *ngIf="
+        pickupAddress.invalid && (pickupAddress.dirty || pickupAddress.touched)
+      "
+      style="color: red"
+    >
+      Please enter a valid address
+    </span>
+    <!-- DELIVERY DETAILS  -->
+    <h3>Delivery Details</h3>
+    <!-- NAME  -->
+    <input
+      class="form-control"
+      type="text"
+      placeholder="Delivery Contact Name"
+      id="deliveryContactName"
+      formControlName="deliveryContactName"
+    />
+    <span
+      *ngIf="
+        deliveryContactName.invalid &&
+        (deliveryContactName.dirty || deliveryContactName.touched)
+      "
+      style="color: red"
+    >
+      Please enter a valid name
+    </span>
+    <!-- NUMBER  -->
+    <div class="input-group" style="margin: 10px 0px">
+      <span class="input-group-text" id="mobileNumber">+91</span>
+      <input
+        type="number"
+        class="form-control"
+        placeholder="Delivery Contact Number"
+        formControlName="deliveryMobile"
+      />
+    </div>
+    <span
+      *ngIf="
+        deliveryMobile.invalid &&
+        (deliveryMobile.dirty || deliveryMobile.touched)
+      "
+      style="color: red"
+    >
+      Please enter a valid mobile number
+    </span>
+    <!-- ADDRESS  -->
+    <input
+      class="form-control"
+      type="text"
+      placeholder="Dropoff - Full Address"
+      id="dropoffAddress"
+      formControlName="dropoffAddress"
+    />
+    <span
+      *ngIf="
+        dropoffAddress.invalid &&
+        (dropoffAddress.dirty || dropoffAddress.touched)
+      "
+      style="color: red"
+    >
+      Please enter a valid dropoff address
+    </span>
+
+    <textarea
+      class="form-control"
+      id="exampleFormControlTextarea1"
+      rows="3"
+      style="margin: 10px 0px"
+      placeholder="Item Description (Optional)"
+      formControlName="itemDescription"
+    ></textarea>
+    <h3>Your Contact Details</h3>
+    <input
+      type="email"
+      class="form-control"
+      id="exampleFormControlInput1"
+      placeholder="Your Email"
+      formControlName="userEmail"
+    />
+    <span
+      *ngIf="userEmail.invalid && (userEmail.dirty || userEmail.touched)"
+      style="color: red"
+    >
+      Please enter a valid email address</span
+    >
+  </section>
+  <!-- END OF POST PROCEED FORM  -->
+
+  <!-- <button type="submit" [disabled]="!profileForm.valid">Submit</button> -->
+  <button
+    type="submit"
+    class="btn btn-success"
+    [disabled]="!profileForm.valid"
+    (click)="onsubmit()"
+    style="margin: 10px 14vw"
+  >
+    Success
+  </button>
 </form>
